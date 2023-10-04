@@ -1,26 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Text.Json;
+class Personal
+{
+    
+    public string Name {get; set ;}
+    public int Badgenumber {get ; set ;}
+    public Personal(string name , int badgenumber)
+    {
+        Name = name;
+        Badgenumber = badgenumber;
+    }
+}
 class Utryckningar
 {
     public string Typ { get; private set; }
     public string Plats { get; private set; }
     public string Tidpunkt { get; private set; }
-    public string Poliser { get; private set; }
-    public Utryckningar(string typ, string plats, string tidpunkt, string poliser)
+
+    public List<Personal> Polices ;
+    public Utryckningar(string typ, string plats, string tidpunkt )
     {
         if ((tidpunkt.IndexOf(":") == 2) && (tidpunkt.Length == 5))
         {
             Typ = typ;
             Plats = plats;
             Tidpunkt = tidpunkt;
-            Poliser = poliser;
+            Polices = new List<Personal>();
         }
         else
         {
-            throw new ArgumentException = ("Date should be 5 letters and it should contain :");
+            throw new ArgumentException("Date should be 5 letters and it should contain :");
         }
 
+    }
+    public void AddPolice(string name, int number)
+    {
+        Polices.Add(new Personal(name , number));
     }
 
 }
@@ -48,11 +64,12 @@ class Rapporter
     }
 }
 
+
 class Program
 {
-    bool IsRunning = true;
-    List<Utryckningar> list1 = new List<Utryckningar>;
-    List<Rapporter> list2 = new List<Rapporter>;
+    static bool IsRunning = true;
+    static List<Utryckningar> list1 = new List<Utryckningar>();
+    static List<Rapporter> list2 = new List<Rapporter>();
     static void Main(string[] args)
     {
         while (IsRunning)
@@ -69,16 +86,32 @@ class Program
             switch (choice.ToUpper())
             {
                 case "R":
-                    // Handle registering an emergency
+                    
+                    Console.WriteLine("Please write the type of crime");
+                    string type = Console.ReadLine();
+                    Console.WriteLine("Please write the place");
+                    string place = Console.ReadLine();
+                    Console.WriteLine("Please write the time");
+                    string time = Console.ReadLine();
+                    Console.WriteLine("Please write the name of the officer");
+                    string CopName = Console.ReadLine();
+                    Console.WriteLine("Please write the bagdge number");
+                    int Badgenumber = Convert.ToInt32(Console.ReadLine());
+                    Utryckningar emergency = new Utryckningar(type, place, time);
+                    emergency.AddPolice(CopName,Badgenumber);
+                    list1.Add(emergency);
                     break;
-                case "RR":
-                    // Handle registering a report
-                    break;
+
                 case "C":
                     Console.WriteLine("Here's the list of emergencies:");
-                    foreach (Utryckningar emergency in list1)
+                    foreach (Utryckningar shit in list1)
                     {
-                        Console.WriteLine($"Type: {emergency.Typ}, Location: {emergency.Plats}, Date: {emergency.Tidpunkt}, Police: {emergency.Poliser}");
+                        Console.Write($"Type: {shit.Typ}, Location: {shit.Plats}, Date: {shit.Tidpunkt},");
+                        Console.Write("Police Officers:");
+                        foreach (Personal police in shit.Polices)
+                        {
+                            Console.WriteLine($"Name: {police.Name}, Badge Number: {police.Badgenumber}");
+                        }
                     }
                     break;
                 case "CR":
